@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class LocationService {
+public class LocationService implements LocationServiceI{
 
     @Autowired
     private final LocationRepository locationRepository;
@@ -24,6 +24,7 @@ public class LocationService {
         this.locationRepository = locationRepository;
     }
 
+    @Override
     public Location addLocation(LocationInput locationInput) {
         // validate by location name
         LocationValidator posValidator = new LocationValidator(locationInput);
@@ -33,10 +34,12 @@ public class LocationService {
         return locationRepository.save(location);
     }
 
+    @Override
     public List<Location> getAllLocations() {
         return locationRepository.findAll();
     }
 
+    @Override
     public Location getLocation(String id) throws NotFoundException {
         Optional<Location> location = locationRepository.findById(id);
         if (!location.isPresent()) {
@@ -45,6 +48,7 @@ public class LocationService {
         return location.get();
     }
 
+    @Override
     public Location updateLocation(String id, LocationInput locationInput) throws NotFoundException {
         Optional<Location> location = locationRepository.findById(id);
         if (!location.isPresent()) {
@@ -57,6 +61,7 @@ public class LocationService {
         return locationRepository.save(location.get());
     }
 
+    @Override
     public Location getLocationByName(String locationName) throws NotFoundException {
         Optional<Location> location = locationRepository.findByLocationName(locationName);
         if (!location.isPresent()) {
@@ -65,6 +70,7 @@ public class LocationService {
         return location.get();
     }
 
+    @Override
     public List<Location> getAllLocationByRadiusAndName(String locationName, Double radius) throws NotFoundException {
         Optional<Location> location = locationRepository.findByLocationName(locationName);
         if (!location.isPresent()) {
@@ -79,6 +85,7 @@ public class LocationService {
         return locations;
     }
 
+    @Override
     public void deleteLocation(String id) throws NotFoundException {
         Location location = getLocation(id);
         locationRepository.delete(location);
